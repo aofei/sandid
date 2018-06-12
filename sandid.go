@@ -71,8 +71,8 @@ func New() SandID {
 	return sID
 }
 
-// SandIDFromString returns a new instance of the `SandID` from the s.
-func SandIDFromString(s string) SandID {
+// Parse parses the s into a new instance of the `SandID`.
+func Parse(s string) SandID {
 	sID := SandID{}
 	hex.Decode(sID[:], []byte(s))
 	return sID
