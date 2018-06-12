@@ -143,7 +143,11 @@ func (sID SandID) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements the `json.Unmarshaler`.
 func (sID *SandID) UnmarshalJSON(data []byte) error {
-	return sID.UnmarshalText(data)
+	s := ""
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	return sID.UnmarshalText([]byte(s))
 }
 
 // Equal reports whether the a and the b are equal.
