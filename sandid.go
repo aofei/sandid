@@ -84,7 +84,7 @@ func SplitParse(s, sep string) []SandID {
 	ss := strings.Split(s, sep)
 	sIDs := make([]SandID, 0, len(ss))
 	for _, s := range ss {
-		sIDs = append(sIDs, SandIDFromString(s))
+		sIDs = append(sIDs, Parse(s))
 	}
 	return sIDs
 }
@@ -96,13 +96,7 @@ func (sID SandID) IsZero() bool {
 
 // Equal reports whether the sID and the a are equal.
 func (sID SandID) Equal(a SandID) bool {
-	return sID.Compare(a) == 0
-}
-
-// Compare returns an integer comparing the sID and the a lexicographically. The
-// result will be 0 if sID == a, -1 if sID < a, and +1 if sID > a.
-func (sID SandID) Compare(a SandID) int {
-	return bytes.Compare(sID[:], a[:])
+	return Compare(sID, a) == 0
 }
 
 // String returns the serialization of the sID.
@@ -155,6 +149,12 @@ func (sID SandID) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON implements the `json.Unmarshaler`.
 func (sID *SandID) UnmarshalJSON(data []byte) error {
 	return sID.UnmarshalText(data)
+}
+
+// Compare returns an integer comparing the a and the b lexicographically. The
+// result will be 0 if a == b, -1 if a < b, and +1 if a > b.
+func Compare(a, b SandID) int {
+	return bytes.Compare(a[:], b[:])
 }
 
 // NullSandID represents an instance of the `SandID` that may be null.
