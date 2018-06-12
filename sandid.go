@@ -91,12 +91,7 @@ func SplitParse(s, sep string) []SandID {
 
 // IsZero reports whether the sID is a zero instance of the `SandID`.
 func (sID SandID) IsZero() bool {
-	return sID.Equal(SandID{})
-}
-
-// Equal reports whether the sID and the a are equal.
-func (sID SandID) Equal(a SandID) bool {
-	return Compare(sID, a) == 0
+	return Equal(sID, SandID{})
 }
 
 // String returns the serialization of the sID.
@@ -149,6 +144,11 @@ func (sID SandID) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON implements the `json.Unmarshaler`.
 func (sID *SandID) UnmarshalJSON(data []byte) error {
 	return sID.UnmarshalText(data)
+}
+
+// Equal reports whether the a and the b are equal.
+func Equal(a, b SandID) bool {
+	return Compare(a, b) == 0
 }
 
 // Compare returns an integer comparing the a and the b lexicographically. The
