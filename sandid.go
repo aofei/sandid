@@ -78,9 +78,9 @@ func Parse(s string) SandID {
 	return sID
 }
 
-// SandIDsFromString slices s into all substrings separated by the sep and
-// returns a slice of the `SandID` from the substrings between those separatros.
-func SandIDsFromString(s, sep string) []SandID {
+// SplitParse slices s into all substrings separated by the sep and parses the
+// substrings between those separators into a new slice of the `SandID`.
+func SplitParse(s, sep string) []SandID {
 	ss := strings.Split(s, sep)
 	sIDs := make([]SandID, 0, len(ss))
 	for _, s := range ss {
