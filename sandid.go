@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"net"
 	"strings"
 	"sync"
@@ -71,10 +72,19 @@ func New() SandID {
 	return sID
 }
 
-// Parse parses the s into a new instance of the `SandID`.
+// Parse parses the s into a new instance of the `SandID`. It returns a zero
+// `SandID` if the s is invalid.
 func Parse(s string) SandID {
 	sID := SandID{}
-	hex.Decode(sID[:], []byte(s))
+	if err := sID.UnmarshalText([]byte(s)); err != nil {
+		for i := range sID {
+			if sID[i] > 0 {
+				sID[i] = 0
+			} else {
+				break
+			}
+		}
+	}
 	return sID
 }
 
@@ -105,8 +115,13 @@ func (sID SandID) String() string {
 //
 // value must be a `[]byte`.
 func (sID *SandID) Scan(value interface{}) error {
-	copy(sID[:], value.([]byte))
-	return nil
+	switch value := value.(type) {
+	case string:
+		return sID.UnmarshalText([]byte(value))
+	case []byte:
+		return sID.UnmarshalBinary(value)
+	}
+	return errors.New("sandid: invalid type SandID value")
 }
 
 // Value implements the `driver.Valuer`.
@@ -121,6 +136,9 @@ func (sID SandID) MarshalText() ([]byte, error) {
 
 // UnmarshalText implements the `encoding.TextUnmarshaler`.
 func (sID *SandID) UnmarshalText(text []byte) error {
+	if len(text) != 32 {
+		return errors.New("sandid: invalid length SandID string")
+	}
 	_, err := hex.Decode(sID[:], text)
 	return err
 }
@@ -132,6 +150,9 @@ func (sID SandID) MarshalBinary() ([]byte, error) {
 
 // UnmarshalBinary implements the `encoding.BinaryUnmarshaler`.
 func (sID *SandID) UnmarshalBinary(data []byte) error {
+	if len(data) != 16 {
+		return errors.New("sandid: invalid length SandID bytes")
+	}
 	copy(sID[:], data)
 	return nil
 }
