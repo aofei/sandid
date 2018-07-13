@@ -18,6 +18,8 @@ func TestNew(t *testing.T) {
 func TestParse(t *testing.T) {
 	assert.Zero(t, Parse("00000000000000000000000000000000"))
 	assert.NotZero(t, Parse("ffffffffffffffffffffffffffffffff"))
+	assert.Zero(t, Parse("0000000000000000000000000000000"))
+	assert.Zero(t, Parse("000000000000000g0000000000000000"))
 }
 
 func TestSplitParse(t *testing.T) {
@@ -43,13 +45,16 @@ func TestSandIDString(t *testing.T) {
 
 func TestSandIDScan(t *testing.T) {
 	sID := SandID{}
-	assert.NoError(t, sID.Scan([]byte{
-		255, 255, 255, 255,
-		255, 255, 255, 255,
-		255, 255, 255, 255,
-		255, 255, 255, 255,
-	}))
+	assert.NoError(t, sID.Scan("ffffffffffffffffffffffffffffffff"))
 	assert.Equal(t, "ffffffffffffffffffffffffffffffff", sID.String())
+	assert.Error(t, sID.Scan([]byte{
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255,
+	}))
+	assert.Error(t, sID.Scan(0))
 }
 
 func TestSandIDValue(t *testing.T) {
