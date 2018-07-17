@@ -17,39 +17,38 @@ import (
 type SandID [16]byte
 
 var (
-	storageOnce     sync.Once
 	storageMutex    sync.Mutex
 	clockSequence   uint16
 	hardwareAddress [6]byte
 	lastTime        uint64
 )
 
-// New returns a new instance of the `SandID`.
-func New() SandID {
-	storageOnce.Do(func() {
-		b := make([]byte, 2)
-		if _, err := rand.Read(b); err != nil {
-			panic(err)
-		}
+func init() {
+	b := make([]byte, 2)
+	if _, err := rand.Read(b); err != nil {
+		panic(err)
+	}
 
-		clockSequence = binary.BigEndian.Uint16(b)
+	clockSequence = binary.BigEndian.Uint16(b)
 
-		if is, err := net.Interfaces(); err == nil {
-			for _, i := range is {
-				if len(i.HardwareAddr) >= 6 {
-					copy(hardwareAddress[:], i.HardwareAddr)
-					return
-				}
+	if is, err := net.Interfaces(); err == nil {
+		for _, i := range is {
+			if len(i.HardwareAddr) >= 6 {
+				copy(hardwareAddress[:], i.HardwareAddr)
+				return
 			}
 		}
+	}
 
-		if _, err := rand.Read(hardwareAddress[:]); err != nil {
-			panic(err)
-		}
+	if _, err := rand.Read(hardwareAddress[:]); err != nil {
+		panic(err)
+	}
 
-		hardwareAddress[0] |= 0x01
-	})
+	hardwareAddress[0] |= 0x01
+}
 
+// New returns a new instance of the `SandID`.
+func New() SandID {
 	storageMutex.Lock()
 	defer storageMutex.Unlock()
 
@@ -57,15 +56,14 @@ func New() SandID {
 	if timeNow <= lastTime {
 		clockSequence++
 	}
+
 	lastTime = timeNow
 
 	sID := SandID{}
-
 	binary.BigEndian.PutUint16(sID[0:], uint16(timeNow>>48))
 	binary.BigEndian.PutUint16(sID[2:], uint16(timeNow>>32))
 	binary.BigEndian.PutUint32(sID[4:], uint32(timeNow))
 	binary.BigEndian.PutUint16(sID[8:], clockSequence)
-
 	copy(sID[10:], hardwareAddress[:])
 
 	return sID
