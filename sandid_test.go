@@ -16,22 +16,24 @@ func TestNew(t *testing.T) {
 }
 
 func TestParse(t *testing.T) {
-	assert.Zero(t, Parse("00000000000000000000000000000000"))
-	assert.NotZero(t, Parse("ffffffffffffffffffffffffffffffff"))
-	assert.Zero(t, Parse("0000000000000000000000000000000"))
-	assert.Zero(t, Parse("000000000000000g0000000000000000"))
+	sID, err := Parse("00000000000000000000000000000000")
+	assert.Zero(t, sID)
+	assert.NoError(t, err)
+	sID, err = Parse("ffffffffffffffffffffffffffffffff")
+	assert.NotZero(t, sID)
+	assert.NoError(t, err)
+	sID, err = Parse("000000000000000g0000000000000000")
+	assert.Zero(t, sID)
+	assert.Error(t, err)
 }
 
-func TestSplitParse(t *testing.T) {
-	sIDs := SplitParse(
-		"00000000000000000000000000000001,"+
-			"00000000000000000000000000000002",
-		",",
-	)
-	assert.Len(t, sIDs, 2)
-	for _, sID := range sIDs {
-		assert.NotZero(t, sID)
-	}
+func TestMustParse(t *testing.T) {
+	assert.NotPanics(t, func() {
+		MustParse("00000000000000000000000000000000")
+	})
+	assert.Panics(t, func() {
+		MustParse("000000000000000g0000000000000000")
+	})
 }
 
 func TestSandIDIsZero(t *testing.T) {
@@ -125,13 +127,13 @@ func TestEqual(t *testing.T) {
 
 func TestCompare(t *testing.T) {
 	assert.Equal(t, -1, Compare(
-		Parse("00000000000000000000000000000001"),
-		Parse("00000000000000000000000000000002"),
+		MustParse("00000000000000000000000000000001"),
+		MustParse("00000000000000000000000000000002"),
 	))
 	assert.Equal(t, 0, Compare(SandID{}, SandID{}))
 	assert.Equal(t, 1, Compare(
-		Parse("00000000000000000000000000000002"),
-		Parse("00000000000000000000000000000001"),
+		MustParse("00000000000000000000000000000002"),
+		MustParse("00000000000000000000000000000001"),
 	))
 }
 
@@ -160,7 +162,7 @@ func TestNullSandIDValue(t *testing.T) {
 	v, err := nsID.Value()
 	assert.NoError(t, err)
 	assert.Nil(t, v)
-	nsID.SandID = Parse("ffffffffffffffffffffffffffffffff")
+	nsID.SandID = MustParse("ffffffffffffffffffffffffffffffff")
 	nsID.Valid = true
 	v, err = nsID.Value()
 	assert.NoError(t, err)

@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net"
-	"strings"
 	"sync"
 	"time"
 )
@@ -72,31 +71,19 @@ func New() SandID {
 	return sID
 }
 
-// Parse parses the s into a new instance of the `SandID`. It returns a zero
-// `SandID` if the s is invalid.
-func Parse(s string) SandID {
+// Parse parses the s into a new instance of the `SandID`.
+func Parse(s string) (SandID, error) {
 	sID := SandID{}
-	if err := sID.UnmarshalText([]byte(s)); err != nil {
-		for i := range sID {
-			if sID[i] > 0 {
-				sID[i] = 0
-			} else {
-				break
-			}
-		}
-	}
-	return sID
+	return sID, sID.UnmarshalText([]byte(s))
 }
 
-// SplitParse slices s into all substrings separated by the sep and parses the
-// substrings between those separators into a new slice of the `SandID`.
-func SplitParse(s, sep string) []SandID {
-	ss := strings.Split(s, sep)
-	sIDs := make([]SandID, 0, len(ss))
-	for _, s := range ss {
-		sIDs = append(sIDs, Parse(s))
+// MustParse is like the `Parse()`, but panics if the s cannot be parsed.
+func MustParse(s string) SandID {
+	sID, err := Parse(s)
+	if err != nil {
+		panic(err)
 	}
-	return sIDs
+	return sID
 }
 
 // IsZero reports whether the sID is a zero instance of the `SandID`.
