@@ -1,6 +1,7 @@
 package sandid
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,6 +13,13 @@ func TestNew(t *testing.T) {
 		sID := New()
 		assert.NotZero(t, sID)
 		sIDs = append(sIDs, sID)
+	}
+	assert.Len(t, sIDs, cap(sIDs))
+	sort.Slice(sIDs, func(i, j int) bool {
+		return Compare(sIDs[i], sIDs[j]) < 0
+	})
+	for i := 1; i < len(sIDs); i++ {
+		assert.NotEqual(t, sIDs[i-1], sIDs[i])
 	}
 }
 
