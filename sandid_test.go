@@ -1,25 +1,15 @@
 package sandid
 
 import (
-	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNew(t *testing.T) {
-	sIDs := make([]SandID, 0, 1000000)
-	for i := 0; i < cap(sIDs); i++ {
+	for i := 0; i < 1000000; i++ {
 		sID := New()
 		assert.NotZero(t, sID)
-		sIDs = append(sIDs, sID)
-	}
-	assert.Len(t, sIDs, cap(sIDs))
-	sort.Slice(sIDs, func(i, j int) bool {
-		return Compare(sIDs[i], sIDs[j]) < 0
-	})
-	for i := 1; i < len(sIDs); i++ {
-		assert.NotEqual(t, sIDs[i-1], sIDs[i])
 	}
 }
 
