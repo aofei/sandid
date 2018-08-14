@@ -17,6 +17,9 @@ import (
 type SandID [16]byte
 
 var (
+	// LeadingNibble is the first half of the leading byte of the `SandID`.
+	LeadingNibble byte
+
 	storageMutex    sync.Mutex
 	clockSequence   uint16
 	hardwareAddress [6]byte
@@ -65,6 +68,8 @@ func New() SandID {
 	binary.BigEndian.PutUint32(sID[4:], uint32(timeNow))
 	binary.BigEndian.PutUint16(sID[8:], clockSequence)
 	copy(sID[10:], hardwareAddress[:])
+
+	sID[0] = (sID[0] & 0x0f) | ((LeadingNibble & 0x0f) << 4)
 
 	return sID
 }
