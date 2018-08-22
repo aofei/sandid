@@ -17,6 +17,10 @@ import (
 type SandID [16]byte
 
 var (
+	// Zero is special form of the `SandID` that is specified to have all
+	// bits set to zero.
+	Zero SandID
+
 	// LeadingNibble is the first half of the leading byte of the `SandID`.
 	LeadingNibble byte
 
@@ -69,7 +73,7 @@ func New() SandID {
 	binary.BigEndian.PutUint16(sID[8:], clockSequence)
 	copy(sID[10:], hardwareAddress[:])
 
-	sID[0] = (sID[0] & 0x0f) | ((LeadingNibble & 0x0f) << 4)
+	sID[0] = sID[0]&0x0f | (LeadingNibble&0x0f)<<4
 
 	return sID
 }
@@ -86,12 +90,13 @@ func MustParse(s string) SandID {
 	if err != nil {
 		panic(err)
 	}
+
 	return sID
 }
 
 // IsZero reports whether the sID is a zero instance of the `SandID`.
 func (sID SandID) IsZero() bool {
-	return Equal(sID, SandID{})
+	return Equal(sID, Zero)
 }
 
 // String returns the serialization of the sID.
@@ -111,6 +116,7 @@ func (sID *SandID) Scan(value interface{}) error {
 	case []byte:
 		return sID.UnmarshalBinary(value)
 	}
+
 	return errors.New("sandid: invalid type SandID value")
 }
 
@@ -129,7 +135,9 @@ func (sID *SandID) UnmarshalText(text []byte) error {
 	if len(text) != 32 {
 		return errors.New("sandid: invalid length SandID string")
 	}
+
 	_, err := hex.Decode(sID[:], text)
+
 	return err
 }
 
@@ -143,7 +151,9 @@ func (sID *SandID) UnmarshalBinary(data []byte) error {
 	if len(data) != 16 {
 		return errors.New("sandid: invalid length SandID bytes")
 	}
+
 	copy(sID[:], data)
+
 	return nil
 }
 
@@ -158,6 +168,7 @@ func (sID *SandID) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
+
 	return sID.UnmarshalText([]byte(s))
 }
 
@@ -186,7 +197,9 @@ func (nsID *NullSandID) Scan(value interface{}) error {
 		nsID.SandID, nsID.Valid = SandID{}, false
 		return nil
 	}
+
 	nsID.Valid = true
+
 	return nsID.SandID.Scan(value)
 }
 
@@ -195,5 +208,6 @@ func (nsID NullSandID) Value() (driver.Value, error) {
 	if !nsID.Valid {
 		return nil, nil
 	}
+
 	return nsID.SandID.Value()
 }
