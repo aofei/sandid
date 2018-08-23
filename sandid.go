@@ -117,7 +117,7 @@ func (sID *SandID) Scan(value interface{}) error {
 		return sID.UnmarshalBinary(value)
 	}
 
-	return errors.New("sandid: invalid type SandID value")
+	return errors.New("sandid: invalid type value")
 }
 
 // Value implements the `driver.Valuer`.
@@ -133,7 +133,7 @@ func (sID SandID) MarshalText() ([]byte, error) {
 // UnmarshalText implements the `encoding.TextUnmarshaler`.
 func (sID *SandID) UnmarshalText(text []byte) error {
 	if len(text) != 32 {
-		return errors.New("sandid: invalid length SandID string")
+		return errors.New("sandid: invalid length string")
 	}
 
 	_, err := hex.Decode(sID[:], text)
@@ -149,7 +149,7 @@ func (sID SandID) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary implements the `encoding.BinaryUnmarshaler`.
 func (sID *SandID) UnmarshalBinary(data []byte) error {
 	if len(data) != 16 {
-		return errors.New("sandid: invalid length SandID bytes")
+		return errors.New("sandid: invalid length bytes")
 	}
 
 	copy(sID[:], data)
