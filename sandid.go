@@ -21,22 +21,21 @@ var (
 	// bits set to zero.
 	Zero SandID
 
-	// LeadingNibble is the first half of the leading byte of the `SandID`.
-	LeadingNibble byte
-
 	storageMutex    sync.Mutex
+	luckyNibble     byte
 	clockSequence   uint16
 	hardwareAddress [6]byte
 	lastTime        uint64
 )
 
 func init() {
-	b := make([]byte, 2)
+	b := make([]byte, 3)
 	if _, err := rand.Read(b); err != nil {
 		panic(err)
 	}
 
-	clockSequence = binary.BigEndian.Uint16(b)
+	luckyNibble = b[0]
+	clockSequence = binary.BigEndian.Uint16(b[1:])
 
 	if is, err := net.Interfaces(); err == nil {
 		for _, i := range is {
@@ -67,13 +66,13 @@ func New() SandID {
 	lastTime = timeNow
 
 	sID := SandID{}
-	binary.BigEndian.PutUint16(sID[0:], uint16(timeNow>>48))
-	binary.BigEndian.PutUint16(sID[2:], uint16(timeNow>>32))
-	binary.BigEndian.PutUint32(sID[4:], uint32(timeNow))
+	binary.BigEndian.PutUint16(sID[0:], uint16(timeNow>>44))
+	binary.BigEndian.PutUint16(sID[2:], uint16(timeNow>>28))
+	binary.BigEndian.PutUint32(sID[4:], uint32(timeNow<<4))
 	binary.BigEndian.PutUint16(sID[8:], clockSequence)
 	copy(sID[10:], hardwareAddress[:])
 
-	sID[0] = sID[0]&0x0f | (LeadingNibble&0x0f)<<4
+	sID[7] = sID[7]&0xf0 | luckyNibble&0x0f
 
 	return sID
 }
