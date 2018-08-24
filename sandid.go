@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"sync"
 	"time"
@@ -26,28 +27,27 @@ var (
 )
 
 func init() {
-	b := make([]byte, 3)
+	b := make([]byte, 9)
 	if _, err := rand.Read(b); err != nil {
-		panic(err)
+		panic(fmt.Errorf(
+			"sandid: failed to read random bytes: %v",
+			err,
+		))
 	}
 
 	luckyNibble = b[0]
-	clockSequence = binary.BigEndian.Uint16(b[1:])
+	clockSequence = binary.BigEndian.Uint16(b[1:3])
 
+	copy(hardwareAddress[:], b[3:])
+	hardwareAddress[0] |= 0x01
 	if is, err := net.Interfaces(); err == nil {
 		for _, i := range is {
 			if len(i.HardwareAddr) >= 6 {
 				copy(hardwareAddress[:], i.HardwareAddr)
-				return
+				break
 			}
 		}
 	}
-
-	if _, err := rand.Read(hardwareAddress[:]); err != nil {
-		panic(err)
-	}
-
-	hardwareAddress[0] |= 0x01
 }
 
 // New returns a new instance of the `SandID`.
