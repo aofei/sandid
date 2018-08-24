@@ -17,10 +17,7 @@ import (
 type SandID [16]byte
 
 var (
-	// Zero is special form of the `SandID` that is specified to have all
-	// bits set to zero.
-	Zero SandID
-
+	zero            SandID
 	storageMutex    sync.Mutex
 	luckyNibble     byte
 	clockSequence   uint16
@@ -95,7 +92,7 @@ func MustParse(s string) SandID {
 
 // IsZero reports whether the sID is a zero instance of the `SandID`.
 func (sID SandID) IsZero() bool {
-	return Equal(sID, Zero)
+	return Equal(sID, zero)
 }
 
 // String returns the serialization of the sID.
