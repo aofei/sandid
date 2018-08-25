@@ -11,6 +11,9 @@ func TestNew(t *testing.T) {
 		sID := New()
 		assert.NotZero(t, sID)
 	}
+
+	lastTime = 1<<64 - 1
+	assert.NotZero(t, New())
 }
 
 func TestParse(t *testing.T) {
@@ -47,6 +50,7 @@ func TestSandIDScan(t *testing.T) {
 	sID := SandID{}
 	assert.NoError(t, sID.Scan("ffffffffffffffffffffffffffffffff"))
 	assert.Equal(t, "ffffffffffffffffffffffffffffffff", sID.String())
+	assert.Error(t, sID.Scan(""))
 	assert.Error(t, sID.Scan([]byte{
 		255, 255, 255, 255,
 		255, 255, 255, 255,
