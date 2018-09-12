@@ -1,9 +1,9 @@
 # SandID
 
-[![Build Status](https://travis-ci.org/sheng/sandid.svg?branch=master)](https://travis-ci.org/sheng/sandid)
-[![Coverage Status](https://coveralls.io/repos/github/sheng/sandid/badge.svg?branch=master)](https://coveralls.io/github/sheng/sandid?branch=master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/sheng/sandid)](https://goreportcard.com/report/github.com/sheng/sandid)
-[![GoDoc](https://godoc.org/github.com/sheng/sandid?status.svg)](https://godoc.org/github.com/sheng/sandid)
+[![Build Status](https://travis-ci.org/aofei/sandid.svg?branch=master)](https://travis-ci.org/aofei/sandid)
+[![Coverage Status](https://coveralls.io/repos/github/aofei/sandid/badge.svg?branch=master)](https://coveralls.io/github/aofei/sandid?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/aofei/sandid)](https://goreportcard.com/report/github.com/aofei/sandid)
+[![GoDoc](https://godoc.org/github.com/aofei/sandid?status.svg)](https://godoc.org/github.com/aofei/sandid)
 
 Every grain of sand on earth has its own ID.
 
@@ -36,7 +36,7 @@ the efficiency of database insertion (see
 Open your terminal and execute
 
 ```bash
-$ go get github.com/sheng/sandid
+$ go get github.com/aofei/sandid
 ```
 
 done.
@@ -46,13 +46,13 @@ done.
 ## Community
 
 If you want to discuss this project, or ask questions about it, simply post
-questions or ideas [here](https://github.com/sheng/sandid/issues).
+questions or ideas [here](https://github.com/aofei/sandid/issues).
 
 ## Contributing
 
 If you want to help build this project, simply follow
-[this](https://github.com/sheng/sandid/wiki/Contributing) to send pull requests
-[here](https://github.com/sheng/sandid/pulls).
+[this](https://github.com/aofei/sandid/wiki/Contributing) to send pull requests
+[here](https://github.com/aofei/sandid/pulls).
 
 ## License
 

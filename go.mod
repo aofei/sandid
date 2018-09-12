@@ -1,4 +1,4 @@
-module github.com/sheng/sandid
+module github.com/aofei/sandid
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
