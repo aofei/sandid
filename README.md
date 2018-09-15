@@ -8,8 +8,8 @@
 Every grain of sand on earth has its own ID.
 
 **It should be noted that the algorithm used to generate the `SandID` in this
-project mainly come from UUID version 1. Some adjustments were made to optimize
-the efficiency of database insertion (see
+project mainly come from the UUID version 1. Some adjustments were made to
+enhance the efficiency of database insertion (see
 [this](https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/)).**
 
 ## Features
