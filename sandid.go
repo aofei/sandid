@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"crypto/rand"
 	"database/sql/driver"
+	"encoding/base64"
 	"encoding/binary"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
 	"sync"
 	"time"
+	"unsafe"
 )
 
 // SandID is an ID of sand.
@@ -97,9 +98,8 @@ func (sID SandID) IsZero() bool {
 
 // String returns the serialization of the sID.
 func (sID SandID) String() string {
-	b := make([]byte, 32)
-	hex.Encode(b, sID[:])
-	return string(b)
+	b, _ := sID.MarshalText()
+	return *(*string)(unsafe.Pointer(&b))
 }
 
 // Scan implements the `sql.Scanner`.
@@ -123,16 +123,23 @@ func (sID SandID) Value() (driver.Value, error) {
 
 // MarshalText implements the `encoding.TextMarshaler`.
 func (sID SandID) MarshalText() ([]byte, error) {
-	return []byte(sID.String()), nil
+	b := make([]byte, base64.RawURLEncoding.EncodedLen(len(sID[:])))
+	base64.RawURLEncoding.Encode(b, sID[:])
+	return b, nil
 }
 
 // UnmarshalText implements the `encoding.TextUnmarshaler`.
 func (sID *SandID) UnmarshalText(text []byte) error {
-	if len(text) != 32 {
+	if base64.RawURLEncoding.DecodedLen(len(text)) != 16 {
 		return errors.New("sandid: invalid length string")
 	}
 
-	_, err := hex.Decode(sID[:], text)
+	n, err := base64.RawURLEncoding.Decode(sID[:], text)
+	if err != nil {
+		for i := range sID[:n] {
+			sID[i] = 0
+		}
+	}
 
 	return err
 }

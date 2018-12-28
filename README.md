@@ -17,12 +17,12 @@ enhance the efficiency of database insertion (see
 * Extremely easy to use
 * Fixed length
 	* 16 bytes
-	* 32 hex characters
+	* 22 characters
 	* 128-bit
 * Huge capacity
 	* Up to 2e128
-* Case insensitivity
-* URL friendly
+* URL safe
+	* `^[A-Za-z0-9-_]{22}$`
 * Encoding friendly
 	* Implemented `encoding.TextMarshaler` and `encoding.TextUnmarshaler`
 	* Implemented `encoding.BinaryMarshaler` and `encoding.BinaryUnmarshaler`
