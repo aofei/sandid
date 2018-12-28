@@ -25,6 +25,7 @@ var (
 	clockSequence   uint16
 	hardwareAddress [6]byte
 	lastTime        uint64
+	encoder         *base64.Encoding
 )
 
 func init() {
@@ -49,6 +50,15 @@ func init() {
 			}
 		}
 	}
+
+	encoder = base64.
+		NewEncoding(
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+				"abcdefghijklmnopqrstuvwxyz" +
+				"0123456789" +
+				"-_",
+		).
+		WithPadding(base64.NoPadding)
 }
 
 // New returns a new instance of the `SandID`.
@@ -123,18 +133,18 @@ func (sID SandID) Value() (driver.Value, error) {
 
 // MarshalText implements the `encoding.TextMarshaler`.
 func (sID SandID) MarshalText() ([]byte, error) {
-	b := make([]byte, base64.RawURLEncoding.EncodedLen(len(sID[:])))
-	base64.RawURLEncoding.Encode(b, sID[:])
+	b := make([]byte, 22)
+	encoder.Encode(b, sID[:])
 	return b, nil
 }
 
 // UnmarshalText implements the `encoding.TextUnmarshaler`.
 func (sID *SandID) UnmarshalText(text []byte) error {
-	if base64.RawURLEncoding.DecodedLen(len(text)) != 16 {
+	if len(text) != 22 {
 		return errors.New("sandid: invalid length string")
 	}
 
-	n, err := base64.RawURLEncoding.Decode(sID[:], text)
+	n, err := encoder.Decode(sID[:], text)
 	if err != nil {
 		for i := range sID[:n] {
 			sID[i] = 0
