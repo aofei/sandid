@@ -20,7 +20,7 @@ func TestParse(t *testing.T) {
 	sID, err := Parse("AAAAAAAAAAAAAAAAAAAAAA")
 	assert.Zero(t, sID)
 	assert.NoError(t, err)
-	sID, err = Parse("AQIDBAUGBwgJCgsMDQ4PEA")
+	sID, err = Parse("AAECAwQFBgcICQoLDA0ODw")
 	assert.NotZero(t, sID)
 	assert.NoError(t, err)
 	sID, err = Parse("AAAAAAAAAAAAAAAAAAAAA=")
@@ -30,7 +30,7 @@ func TestParse(t *testing.T) {
 
 func TestMustParse(t *testing.T) {
 	assert.NotPanics(t, func() {
-		MustParse("AQIDBAUGBwgJCgsMDQ4PEA")
+		MustParse("AAECAwQFBgcICQoLDA0ODw")
 	})
 	assert.Panics(t, func() {
 		MustParse("AAAAAAAAAAAAAAAAAAAAA=")
@@ -48,15 +48,15 @@ func TestSandIDString(t *testing.T) {
 
 func TestSandIDScan(t *testing.T) {
 	sID := SandID{}
-	assert.NoError(t, sID.Scan("AQIDBAUGBwgJCgsMDQ4PEA"))
-	assert.Equal(t, "AQIDBAUGBwgJCgsMDQ4PEA", sID.String())
+	assert.NoError(t, sID.Scan("AAECAwQFBgcICQoLDA0ODw"))
+	assert.Equal(t, "AAECAwQFBgcICQoLDA0ODw", sID.String())
 	assert.Error(t, sID.Scan(""))
 	assert.Error(t, sID.Scan([]byte{
-		1, 2, 3, 4,
-		5, 6, 7, 8,
-		9, 10, 11, 12,
-		13, 14, 15, 16,
-		17,
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15,
+		16,
 	}))
 	assert.Error(t, sID.Scan(0))
 }
@@ -80,14 +80,14 @@ func TestSandIDMarshalText(t *testing.T) {
 func TestSandIDUnmarshalText(t *testing.T) {
 	sID := SandID{}
 	assert.NoError(t, sID.UnmarshalText([]byte{
-		65, 81, 73, 68,
-		66, 65, 85, 71,
-		66, 119, 103, 74,
-		67, 103, 115, 77,
-		68, 81, 52, 80,
-		69, 65,
+		65, 65, 69, 67,
+		65, 119, 81, 70,
+		66, 103, 99, 73,
+		67, 81, 111, 76,
+		68, 65, 48, 79,
+		68, 119,
 	}))
-	assert.Equal(t, "AQIDBAUGBwgJCgsMDQ4PEA", sID.String())
+	assert.Equal(t, "AAECAwQFBgcICQoLDA0ODw", sID.String())
 }
 
 func TestSandIDMarshalBinary(t *testing.T) {
@@ -100,12 +100,12 @@ func TestSandIDMarshalBinary(t *testing.T) {
 func TestSandIDUnmarshalBinary(t *testing.T) {
 	sID := SandID{}
 	assert.NoError(t, sID.UnmarshalBinary([]byte{
-		1, 2, 3, 4,
-		5, 6, 7, 8,
-		9, 10, 11, 12,
-		13, 14, 15, 16,
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15,
 	}))
-	assert.Equal(t, "AQIDBAUGBwgJCgsMDQ4PEA", sID.String())
+	assert.Equal(t, "AAECAwQFBgcICQoLDA0ODw", sID.String())
 }
 
 func TestSandIDMarshalJSON(t *testing.T) {
@@ -118,8 +118,8 @@ func TestSandIDMarshalJSON(t *testing.T) {
 func TestSandIDUnmarshalJSON(t *testing.T) {
 	sID := SandID{}
 	assert.Error(t, sID.UnmarshalJSON(nil))
-	assert.NoError(t, sID.UnmarshalJSON([]byte(`"AQIDBAUGBwgJCgsMDQ4PEA"`)))
-	assert.Equal(t, "AQIDBAUGBwgJCgsMDQ4PEA", sID.String())
+	assert.NoError(t, sID.UnmarshalJSON([]byte(`"AAECAwQFBgcICQoLDA0ODw"`)))
+	assert.Equal(t, "AAECAwQFBgcICQoLDA0ODw", sID.String())
 }
 
 func TestEqual(t *testing.T) {
@@ -145,14 +145,14 @@ func TestNullSandIDScan(t *testing.T) {
 	assert.True(t, nsID.SandID.IsZero())
 	assert.False(t, nsID.Valid)
 	assert.NoError(t, nsID.Scan([]byte{
-		1, 2, 3, 4,
-		5, 6, 7, 8,
-		9, 10, 11, 12,
-		13, 14, 15, 16,
+		0, 1, 2, 3,
+		4, 5, 6, 7,
+		8, 9, 10, 11,
+		12, 13, 14, 15,
 	}))
 	assert.False(t, nsID.SandID.IsZero())
 	assert.True(t, nsID.Valid)
-	assert.Equal(t, "AQIDBAUGBwgJCgsMDQ4PEA", nsID.SandID.String())
+	assert.Equal(t, "AAECAwQFBgcICQoLDA0ODw", nsID.SandID.String())
 }
 
 func TestNullSandIDValue(t *testing.T) {
@@ -160,7 +160,7 @@ func TestNullSandIDValue(t *testing.T) {
 	v, err := nsID.Value()
 	assert.NoError(t, err)
 	assert.Nil(t, v)
-	nsID.SandID = MustParse("AQIDBAUGBwgJCgsMDQ4PEA")
+	nsID.SandID = MustParse("AAECAwQFBgcICQoLDA0ODw")
 	nsID.Valid = true
 	v, err = nsID.Value()
 	assert.NoError(t, err)
