@@ -81,7 +81,7 @@ func Parse(s string) (SandID, error) {
 	return sID, sID.UnmarshalText([]byte(s))
 }
 
-// MustParse is like the `Parse()`, but panics if the s cannot be parsed.
+// MustParse is like the `Parse`, but panics if the s cannot be parsed.
 func MustParse(s string) SandID {
 	sID, err := Parse(s)
 	if err != nil {
