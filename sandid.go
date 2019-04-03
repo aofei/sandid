@@ -8,12 +8,12 @@ import (
 	"bytes"
 	"crypto/rand"
 	"database/sql/driver"
-	"encoding/base64"
 	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
+	"strconv"
 	"sync"
 	"time"
 	"unsafe"
@@ -23,12 +23,22 @@ import (
 type SandID [16]byte
 
 var (
-	zero            SandID
+	zero SandID
+
 	storageMutex    sync.Mutex
 	luckyNibble     byte
 	clockSequence   uint16
 	hardwareAddress [6]byte
 	lastTime        uint64
+
+	encoding = [64]byte{
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
+	}
+	decoding [256]byte
 )
 
 func init() {
@@ -52,6 +62,14 @@ func init() {
 				break
 			}
 		}
+	}
+
+	for i := 0; i < len(decoding); i++ {
+		decoding[i] = 0xff
+	}
+
+	for i := 0; i < len(encoding); i++ {
+		decoding[encoding[i]] = byte(i)
 	}
 }
 
@@ -127,9 +145,22 @@ func (sID SandID) Value() (driver.Value, error) {
 
 // MarshalText implements the `encoding.TextMarshaler`.
 func (sID SandID) MarshalText() ([]byte, error) {
-	b := make([]byte, 24)
-	base64.URLEncoding.Encode(b, sID[:])
-	return b[:22], nil
+	d := make([]byte, 22)
+
+	si, di := 0, 0
+	for ; si < 15; si, di = si+3, di+4 { // si < (len(sID) / 3) * 3
+		v := uint(sID[si])<<16 | uint(sID[si+1])<<8 | uint(sID[si+2])
+		d[di] = encoding[v>>18&0x3f]
+		d[di+1] = encoding[v>>12&0x3f]
+		d[di+2] = encoding[v>>6&0x3f]
+		d[di+3] = encoding[v&0x3f]
+	}
+
+	v := uint(sID[si]) << 16
+	d[di] = encoding[v>>18&0x3f]
+	d[di+1] = encoding[v>>12&0x3f]
+
+	return d, nil
 }
 
 // UnmarshalText implements the `encoding.TextUnmarshaler`.
@@ -138,15 +169,64 @@ func (sID *SandID) UnmarshalText(text []byte) error {
 		return errors.New("sandid: invalid length string")
 	}
 
-	b := make([]byte, 24)
-	copy(b, text)
-	b[22], b[23] = 61, 61
+	si, n := 0, 0
+	if strconv.IntSize >= 64 {
+		for ; si <= 22-8 && n <= 16-8; si, n = si+8, n+6 {
+			n1 := decoding[text[si]]
+			n2 := decoding[text[si+1]]
+			n3 := decoding[text[si+2]]
+			n4 := decoding[text[si+3]]
+			n5 := decoding[text[si+4]]
+			n6 := decoding[text[si+5]]
+			n7 := decoding[text[si+6]]
+			n8 := decoding[text[si+7]]
+			if n1|n2|n3|n4|n5|n6|n7|n8 == 0xff {
+				return errors.New("sandid: invalid string")
+			}
 
-	d := make([]byte, 18)
-	n, err := base64.URLEncoding.Decode(d, b)
-	copy(sID[:], d[:n])
+			binary.BigEndian.PutUint64(
+				sID[n:],
+				uint64(n1)<<58|
+					uint64(n2)<<52|
+					uint64(n3)<<46|
+					uint64(n4)<<40|
+					uint64(n5)<<34|
+					uint64(n6)<<28|
+					uint64(n7)<<22|
+					uint64(n8)<<16,
+			)
+		}
+	}
 
-	return err
+	for ; si <= 22-4 && n <= 16-4; si, n = si+4, n+3 {
+		n1 := decoding[text[si]]
+		n2 := decoding[text[si+1]]
+		n3 := decoding[text[si+2]]
+		n4 := decoding[text[si+3]]
+		if n1|n2|n3|n4 == 0xff {
+			return errors.New("sandid: invalid string")
+		}
+
+		binary.BigEndian.PutUint32(
+			sID[n:],
+			uint32(n1)<<26|
+				uint32(n2)<<20|
+				uint32(n3)<<14|
+				uint32(n4)<<8,
+		)
+	}
+
+	b := [4]byte{}
+	for i := 0; i < 4 && si < 22; i, si = i+1, si+1 {
+		if b[i] = decoding[text[si]]; b[i] == 0xff {
+			return errors.New("sandid: invalid string")
+		}
+	}
+
+	v := uint(b[0])<<18 | uint(b[1])<<12 | uint(b[2])<<6 | uint(b[3])
+	sID[n] = byte(v >> 16)
+
+	return nil
 }
 
 // MarshalBinary implements the `encoding.BinaryMarshaler`.

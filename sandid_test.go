@@ -1,6 +1,7 @@
 package sandid
 
 import (
+	"encoding/base64"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -74,7 +75,11 @@ func TestSandIDMarshalText(t *testing.T) {
 	sID := New()
 	b, err := sID.MarshalText()
 	assert.NoError(t, err)
-	assert.Equal(t, sID.String(), string(b))
+	assert.Equal(
+		t,
+		base64.URLEncoding.EncodeToString(sID[:])[:22],
+		string(b),
+	)
 }
 
 func TestSandIDUnmarshalText(t *testing.T) {
@@ -87,7 +92,9 @@ func TestSandIDUnmarshalText(t *testing.T) {
 		68, 65, 48, 79,
 		68, 119,
 	}))
-	assert.Equal(t, "AAECAwQFBgcICQoLDA0ODw", sID.String())
+	b, err := base64.URLEncoding.DecodeString("AAECAwQFBgcICQoLDA0ODw==")
+	assert.NoError(t, err)
+	assert.Equal(t, b[:16], sID[:])
 }
 
 func TestSandIDMarshalBinary(t *testing.T) {
