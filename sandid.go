@@ -1,3 +1,7 @@
+/*
+Package sandid implements a unique ID generation algorithm to ensure that every
+grain of sand on earth has its own ID.
+*/
 package sandid
 
 import (
@@ -104,7 +108,7 @@ func (sID SandID) String() string {
 
 // Scan implements the `sql.Scanner`.
 //
-// value must be a `[]byte`.
+// The value must be a `[]byte`.
 func (sID *SandID) Scan(value interface{}) error {
 	switch value := value.(type) {
 	case string:
@@ -187,9 +191,8 @@ func Compare(a, b SandID) int {
 	return bytes.Compare(a[:], b[:])
 }
 
-// NullSandID represents an instance of the `SandID` that may be null.
-// NullSandID implements the `sql.Scanner` so it can be used as a scan
-// destination.
+// NullSandID represents an instance of the `SandID` that may be null. It
+// implements the `sql.Scanner` so it can be used as a scan destination.
 type NullSandID struct {
 	SandID SandID
 	Valid  bool
