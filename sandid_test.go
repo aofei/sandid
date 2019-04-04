@@ -84,6 +84,30 @@ func TestSandIDMarshalText(t *testing.T) {
 
 func TestSandIDUnmarshalText(t *testing.T) {
 	sID := SandID{}
+	assert.Error(t, sID.UnmarshalText([]byte{
+		65, 65, 69, 67,
+		65, 119, 81, 70,
+		66, 103, 99, 73,
+		67, 81, 111, 76,
+		68, 65, 48, 79,
+		68,
+	}))
+	assert.Error(t, sID.UnmarshalText([]byte{
+		0xff, 65, 69, 67,
+		65, 119, 81, 70,
+		66, 103, 99, 73,
+		67, 81, 111, 76,
+		68, 65, 48, 79,
+		68, 119,
+	}))
+	assert.Error(t, sID.UnmarshalText([]byte{
+		65, 65, 69, 67,
+		65, 119, 81, 70,
+		66, 103, 99, 73,
+		67, 81, 111, 76,
+		68, 65, 48, 0xff,
+		68, 119,
+	}))
 	assert.NoError(t, sID.UnmarshalText([]byte{
 		65, 65, 69, 67,
 		65, 119, 81, 70,
