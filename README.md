@@ -7,9 +7,10 @@
 
 Every grain of sand on earth has its own ID.
 
-**It should be noted that the algorithm used to generate the `SandID` in this
-project mainly come from the UUID version 1. Some adjustments were made to
-enhance the efficiency of database insertion (see
+**Note that the algorithm used to generate the
+[`sandid.SandID`](https://godoc.org/github.com/aofei/sandid#SandID) mainly come
+from the [UUID](https://tools.ietf.org/html/rfc4122) version 1. Some adjustments
+were made to enhance the efficiency of database insertion (see
 [this](https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/)).**
 
 ## Features
@@ -24,12 +25,12 @@ enhance the efficiency of database insertion (see
 * URL safe
 	* `^[A-Za-z0-9-_]{22}$`
 * Encoding friendly
-	* Implemented `encoding.TextMarshaler` and `encoding.TextUnmarshaler`
-	* Implemented `encoding.BinaryMarshaler` and `encoding.BinaryUnmarshaler`
-	* Implemented `json.Marshaler` and `json.Unmarshaler`
+	* Implemented [`encoding.TextMarshaler`](https://godoc.org/encoding#TextMarshaler) and [`encoding.TextUnmarshaler`](https://godoc.org/encoding#TextUnmarshaler)
+	* Implemented [`encoding.BinaryMarshaler`](https://godoc.org/encoding#BinaryMarshaler) and [`encoding.BinaryUnmarshaler`](https://godoc.org/encoding#BinaryUnmarshaler)
+	* Implemented [`json.Marshaler`](https://godoc.org/encoding/json#Marshaler) and [`json.Unmarshaler`](https://godoc.org/encoding/json#Unmarshaler)
 * SQL friendly
-	* `NullSandID` support
-	* Implemented `sql.Scanner` and `driver.Valuer`
+	* [`sandid.NullSandID`](https://godoc.org/github.com/aofei/sandid#NullSandID) support
+	* Implemented [`sql.Scanner`](https://godoc.org/database/sql#Scanner) and [`driver.Valuer`](https://godoc.org/database/sql/driver#Valuer)
 
 ## Installation
 
@@ -45,12 +46,12 @@ done.
 
 ## Community
 
-If you want to discuss this project, or ask questions about it, simply post
-questions or ideas [here](https://github.com/aofei/sandid/issues).
+If you want to discuss SandID, or ask questions about it, simply post questions
+or ideas [here](https://github.com/aofei/sandid/issues).
 
 ## Contributing
 
-If you want to help build this project, simply follow
+If you want to help build SandID, simply follow
 [this](https://github.com/aofei/sandid/wiki/Contributing) to send pull requests
 [here](https://github.com/aofei/sandid/pulls).
 
