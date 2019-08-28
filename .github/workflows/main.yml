@@ -24,13 +24,13 @@ jobs:
         with:
           go-version: ${{matrix.go}}
         env:
-          GOPATH: /tmp/gopath # For versions prior to Go 1.11
+          GOPATH: /home/runner # Fix for actions/setup-go@v1.0.2
       - name: Check out code
         uses: actions/checkout@v1.0.0
       - name: Get modules
         run: go get -v -t -d ./...
       - name: Test
-        run: go test -v --coverprofile=cover.out $(go list ./... | grep -v /vendor/)
+        run: go test -v --coverprofile=cover.out ./...
       - name: Upload coverage profile
         uses: codecov/codecov-action@v1.0.2
         with:
