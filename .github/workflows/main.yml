@@ -26,6 +26,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v1.0.0
       - name: Get modules
+        env:
+          GOPATH: /tmp/gopath # For versions prior to Go 1.11
         run: go get -v -t -d ./...
       - name: Test
         run: go test -v --coverprofile=cover.out ./...
