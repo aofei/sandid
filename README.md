@@ -1,7 +1,6 @@
 # SandID
 
-[![Build Status](https://travis-ci.org/aofei/sandid.svg?branch=master)](https://travis-ci.org/aofei/sandid)
-[![Coverage Status](https://coveralls.io/repos/github/aofei/sandid/badge.svg?branch=master)](https://coveralls.io/github/aofei/sandid?branch=master)
+[![codecov](https://codecov.io/gh/aofei/sandid/branch/master/graph/badge.svg)](https://codecov.io/gh/aofei/sandid)
 [![Go Report Card](https://goreportcard.com/badge/github.com/aofei/sandid)](https://goreportcard.com/report/github.com/aofei/sandid)
 [![GoDoc](https://godoc.org/github.com/aofei/sandid?status.svg)](https://godoc.org/github.com/aofei/sandid)
 
