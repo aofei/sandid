@@ -1,5 +1,6 @@
 # SandID
 
+[![GitHub Actions](https://github.com/aofei/sandid/workflows/Main/badge.svg)](https://github.com/aofei/sandid)
 [![codecov](https://codecov.io/gh/aofei/sandid/branch/master/graph/badge.svg)](https://codecov.io/gh/aofei/sandid)
 [![Go Report Card](https://goreportcard.com/badge/github.com/aofei/sandid)](https://goreportcard.com/report/github.com/aofei/sandid)
 [![GoDoc](https://godoc.org/github.com/aofei/sandid?status.svg)](https://godoc.org/github.com/aofei/sandid)
