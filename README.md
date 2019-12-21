@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/aofei/sandid)](https://goreportcard.com/report/github.com/aofei/sandid)
 [![GoDoc](https://godoc.org/github.com/aofei/sandid?status.svg)](https://godoc.org/github.com/aofei/sandid)
 
-Every grain of sand on earth has its own ID.
+Every grain of sand on Earth has its own ID.
 
 **Note that the algorithm used to generate the
 [`sandid.SandID`](https://godoc.org/github.com/aofei/sandid#SandID) mainly come

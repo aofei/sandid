@@ -1,6 +1,6 @@
 /*
 Package sandid implements a unique ID generation algorithm to ensure that every
-grain of sand on earth has its own ID.
+grain of sand on Earth has its own ID.
 */
 package sandid
 
