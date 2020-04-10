@@ -11,6 +11,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"strconv"
 	"sync"
@@ -42,7 +43,12 @@ var (
 
 func init() {
 	b := make([]byte, 9)
-	rand.Read(b)
+	if _, err := rand.Read(b); err != nil {
+		panic(fmt.Errorf(
+			"sandid: failed to read random bytes: %v",
+			err,
+		))
+	}
 
 	luckyNibble = b[0]
 	clockSequence = binary.BigEndian.Uint16(b[1:3])
