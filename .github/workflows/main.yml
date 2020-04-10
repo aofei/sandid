@@ -23,7 +23,7 @@ jobs:
         with:
           go-version: ${{matrix.go}}
         env:
-          GOPATH: /home/runner # Fix for actions/setup-go@v1.0.2
+          GOPATH: /home/runner # Fix for actions/setup-go
       - name: Check out code
         uses: actions/checkout@v2.1.0
       - name: Get modules
