@@ -19,19 +19,17 @@ jobs:
           - "1.14.x"
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v1.0.2
+        uses: actions/setup-go@v1.1.2
         with:
           go-version: ${{matrix.go}}
-        env:
-          GOPATH: /home/runner # Fix for actions/setup-go@v1.0.2
       - name: Check out code
-        uses: actions/checkout@v2.0.0
+        uses: actions/checkout@v2.1.0
       - name: Get modules
         run: go get -v -t -d ./...
       - name: Test
         run: go test -v --coverprofile=cover.out ./...
       - name: Upload coverage profile
-        uses: codecov/codecov-action@v1.0.5
+        uses: codecov/codecov-action@v1.0.6
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           file: cover.out
