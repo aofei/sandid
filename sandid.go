@@ -260,12 +260,12 @@ func (sID *SandID) UnmarshalJSON(data []byte) error {
 	return sID.UnmarshalText([]byte(s))
 }
 
-// Equal reports whether the a and the b are equal.
+// Equal reports whether the a and b are equal.
 func Equal(a, b SandID) bool {
 	return Compare(a, b) == 0
 }
 
-// Compare returns an integer comparing the a and the b lexicographically. The
+// Compare returns an integer comparing the a and b lexicographically. The
 // result will be 0 if a == b, -1 if a < b, and +1 if a > b.
 func Compare(a, b SandID) int {
 	return bytes.Compare(a[:], b[:])
