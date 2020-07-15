@@ -3,12 +3,12 @@
 [![GitHub Actions](https://github.com/aofei/sandid/workflows/Main/badge.svg)](https://github.com/aofei/sandid)
 [![codecov](https://codecov.io/gh/aofei/sandid/branch/master/graph/badge.svg)](https://codecov.io/gh/aofei/sandid)
 [![Go Report Card](https://goreportcard.com/badge/github.com/aofei/sandid)](https://goreportcard.com/report/github.com/aofei/sandid)
-[![GoDoc](https://godoc.org/github.com/aofei/sandid?status.svg)](https://godoc.org/github.com/aofei/sandid)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/aofei/sandid)](https://pkg.go.dev/github.com/aofei/sandid)
 
 Every grain of sand on Earth has its own ID.
 
 **Note that the algorithm used to generate the
-[`sandid.SandID`](https://godoc.org/github.com/aofei/sandid#SandID) mainly come
+[`sandid.SandID`](https://pkg.go.dev/github.com/aofei/sandid#SandID) mainly come
 from the [UUID](https://tools.ietf.org/html/rfc4122) version 1. Some adjustments
 were made to enhance the efficiency of database insertion (see
 [this](https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/)).**
@@ -25,12 +25,12 @@ were made to enhance the efficiency of database insertion (see
 * URL safe
 	* `^[A-Za-z0-9-_]{22}$`
 * Encoding friendly
-	* Implemented [`encoding.TextMarshaler`](https://godoc.org/encoding#TextMarshaler) and [`encoding.TextUnmarshaler`](https://godoc.org/encoding#TextUnmarshaler)
-	* Implemented [`encoding.BinaryMarshaler`](https://godoc.org/encoding#BinaryMarshaler) and [`encoding.BinaryUnmarshaler`](https://godoc.org/encoding#BinaryUnmarshaler)
-	* Implemented [`json.Marshaler`](https://godoc.org/encoding/json#Marshaler) and [`json.Unmarshaler`](https://godoc.org/encoding/json#Unmarshaler)
+	* Implemented [`encoding.TextMarshaler`](https://pkg.go.dev/encoding#TextMarshaler) and [`encoding.TextUnmarshaler`](https://pkg.go.dev/encoding#TextUnmarshaler)
+	* Implemented [`encoding.BinaryMarshaler`](https://pkg.go.dev/encoding#BinaryMarshaler) and [`encoding.BinaryUnmarshaler`](https://pkg.go.dev/encoding#BinaryUnmarshaler)
+	* Implemented [`json.Marshaler`](https://pkg.go.dev/encoding/json#Marshaler) and [`json.Unmarshaler`](https://pkg.go.dev/encoding/json#Unmarshaler)
 * SQL friendly
-	* [`sandid.NullSandID`](https://godoc.org/github.com/aofei/sandid#NullSandID) support
-	* Implemented [`sql.Scanner`](https://godoc.org/database/sql#Scanner) and [`driver.Valuer`](https://godoc.org/database/sql/driver#Valuer)
+	* [`sandid.NullSandID`](https://pkg.go.dev/github.com/aofei/sandid#NullSandID) support
+	* Implemented [`sql.Scanner`](https://pkg.go.dev/database/sql#Scanner) and [`driver.Valuer`](https://pkg.go.dev/database/sql/driver#Valuer)
 
 ## Installation
 
