@@ -55,12 +55,11 @@ func init() {
 
 	copy(hardwareAddress[:], b[3:])
 	hardwareAddress[0] |= 0x01
-	if is, err := net.Interfaces(); err == nil {
-		for _, i := range is {
-			if len(i.HardwareAddr) >= 6 {
-				copy(hardwareAddress[:], i.HardwareAddr)
-				break
-			}
+	netInterfaces, _ := net.Interfaces()
+	for _, ni := range netInterfaces {
+		if len(ni.HardwareAddr) >= 6 {
+			copy(hardwareAddress[:], ni.HardwareAddr)
+			break
 		}
 	}
 
