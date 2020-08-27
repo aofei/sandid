@@ -16,7 +16,6 @@ import (
 	"strconv"
 	"sync"
 	"time"
-	"unsafe"
 )
 
 // SandID is an ID of sand.
@@ -120,7 +119,7 @@ func (sID SandID) IsZero() bool {
 // String returns the serialization of the sID.
 func (sID SandID) String() string {
 	b, _ := sID.MarshalText()
-	return *(*string)(unsafe.Pointer(&b))
+	return string(b)
 }
 
 // Scan implements the `sql.Scanner`.
@@ -139,7 +138,7 @@ func (sID *SandID) Scan(value interface{}) error {
 
 // Value implements the `driver.Valuer`.
 func (sID SandID) Value() (driver.Value, error) {
-	return sID[:], nil
+	return sID.MarshalBinary()
 }
 
 // MarshalText implements the `encoding.TextMarshaler`.
