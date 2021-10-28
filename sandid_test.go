@@ -261,22 +261,22 @@ func TestEqual(t *testing.T) {
 }
 
 func TestCompare(t *testing.T) {
-	if result := Compare(
+	if got, want := Compare(
 		MustParse("AAAAAAAAAAAAAAAAAAAAAQ"),
 		MustParse("AAAAAAAAAAAAAAAAAAAAAg"),
-	); result != -1 {
-		t.Errorf("got %v, want -1", result)
+	), -1; got != want {
+		t.Errorf("got %d, want %d", got, want)
 	}
 
-	if result := Compare(SandID{}, SandID{}); result != 0 {
-		t.Errorf("got %v, want 0", result)
+	if got, want := Compare(SandID{}, SandID{}), 0; got != want {
+		t.Errorf("got %d, want %d", got, want)
 	}
 
-	if result := Compare(
+	if got, want := Compare(
 		MustParse("AAAAAAAAAAAAAAAAAAAAAg"),
 		MustParse("AAAAAAAAAAAAAAAAAAAAAQ"),
-	); result != 1 {
-		t.Errorf("got %v, want 1", result)
+	), 1; got != want {
+		t.Errorf("got %d, want %d", got, want)
 	}
 }
 
