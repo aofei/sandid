@@ -95,13 +95,13 @@ func New() SandID {
 	return sID
 }
 
-// Parse parses the s into a new instance of the `SandID`.
+// Parse parses the `s` into a new instance of the `SandID`.
 func Parse(s string) (SandID, error) {
 	sID := SandID{}
 	return sID, sID.UnmarshalText([]byte(s))
 }
 
-// MustParse is like the `Parse`, but panics if the s cannot be parsed.
+// MustParse is like the `Parse`, but panics if the `s` cannot be parsed.
 func MustParse(s string) SandID {
 	sID, err := Parse(s)
 	if err != nil {
@@ -111,12 +111,12 @@ func MustParse(s string) SandID {
 	return sID
 }
 
-// IsZero reports whether the sID is a zero instance of the `SandID`.
+// IsZero reports whether the `sID` is a zero instance of the `SandID`.
 func (sID SandID) IsZero() bool {
 	return Equal(sID, zero)
 }
 
-// String returns the serialization of the sID.
+// String returns the serialization of the `sID`.
 func (sID SandID) String() string {
 	b, _ := sID.MarshalText()
 	return string(b)
@@ -124,7 +124,7 @@ func (sID SandID) String() string {
 
 // Scan implements the `sql.Scanner`.
 //
-// The value must be a `[]byte`.
+// The `value` must be a `[]byte`.
 func (sID *SandID) Scan(value interface{}) error {
 	switch value := value.(type) {
 	case string:
@@ -258,13 +258,13 @@ func (sID *SandID) UnmarshalJSON(data []byte) error {
 	return sID.UnmarshalText([]byte(s))
 }
 
-// Equal reports whether the a and b are equal.
+// Equal reports whether the `a` and `b` are equal.
 func Equal(a, b SandID) bool {
 	return Compare(a, b) == 0
 }
 
-// Compare returns an integer comparing the a and b lexicographically. The
-// result will be 0 if a == b, -1 if a < b, and +1 if a > b.
+// Compare returns an integer comparing the `a` and `b` lexicographically. The
+// result will be `0` if `a == b`, `-1` if `a < b`, and `+1` if `a > b`.
 func Compare(a, b SandID) int {
 	return bytes.Compare(a[:], b[:])
 }
