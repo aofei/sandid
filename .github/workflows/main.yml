@@ -20,9 +20,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Test
-        run: go test -v --coverprofile=cover.out ./...
+        run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
       - name: Upload coverage profile
         uses: codecov/codecov-action@v2
         with:
           token: ${{secrets.CODECOV_TOKEN}}
-          file: cover.out
+          file: coverage.out
