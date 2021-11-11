@@ -31,6 +31,7 @@ were made to enhance the efficiency of database insertion (see
 * SQL friendly
 	* [`sandid.NullSandID`](https://pkg.go.dev/github.com/aofei/sandid#NullSandID) support
 	* Implemented [`sql.Scanner`](https://pkg.go.dev/database/sql#Scanner) and [`driver.Valuer`](https://pkg.go.dev/database/sql/driver#Valuer)
+* Zero third-party dependencies
 
 ## Installation
 
