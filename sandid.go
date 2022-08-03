@@ -71,7 +71,7 @@ func init() {
 	}
 }
 
-// New returns a new instance of the `SandID`.
+// New returns a new instance of the [SandID].
 func New() SandID {
 	storageMutex.Lock()
 	defer storageMutex.Unlock()
@@ -95,13 +95,13 @@ func New() SandID {
 	return sID
 }
 
-// Parse parses the `s` into a new instance of the `SandID`.
+// Parse parses the s into a new instance of the [SandID].
 func Parse(s string) (SandID, error) {
 	sID := SandID{}
 	return sID, sID.UnmarshalText([]byte(s))
 }
 
-// MustParse is like the `Parse`, but panics if the `s` cannot be parsed.
+// MustParse is like the [Parse], but panics if the s cannot be parsed.
 func MustParse(s string) SandID {
 	sID, err := Parse(s)
 	if err != nil {
@@ -111,20 +111,20 @@ func MustParse(s string) SandID {
 	return sID
 }
 
-// IsZero reports whether the `sID` is a zero instance of the `SandID`.
+// IsZero reports whether the sID is zero.
 func (sID SandID) IsZero() bool {
 	return Equal(sID, zero)
 }
 
-// String returns the serialization of the `sID`.
+// String returns the serialization of the sID.
 func (sID SandID) String() string {
 	b, _ := sID.MarshalText()
 	return string(b)
 }
 
-// Scan implements the `sql.Scanner`.
+// Scan implements the [database/sql.Scanner].
 //
-// The `value` must be a `[]byte`.
+// The value must be a string or []byte.
 func (sID *SandID) Scan(value interface{}) error {
 	switch value := value.(type) {
 	case string:
@@ -136,12 +136,12 @@ func (sID *SandID) Scan(value interface{}) error {
 	return errors.New("sandid: invalid type value")
 }
 
-// Value implements the `driver.Valuer`.
+// Value implements the [driver.Valuer].
 func (sID SandID) Value() (driver.Value, error) {
 	return sID.MarshalBinary()
 }
 
-// MarshalText implements the `encoding.TextMarshaler`.
+// MarshalText implements the [encoding.TextMarshaler].
 func (sID SandID) MarshalText() ([]byte, error) {
 	d := make([]byte, 22)
 
@@ -161,7 +161,7 @@ func (sID SandID) MarshalText() ([]byte, error) {
 	return d, nil
 }
 
-// UnmarshalText implements the `encoding.TextUnmarshaler`.
+// UnmarshalText implements the [encoding.TextUnmarshaler].
 func (sID *SandID) UnmarshalText(text []byte) error {
 	if len(text) != 22 {
 		return errors.New("sandid: invalid length string")
@@ -227,12 +227,12 @@ func (sID *SandID) UnmarshalText(text []byte) error {
 	return nil
 }
 
-// MarshalBinary implements the `encoding.BinaryMarshaler`.
+// MarshalBinary implements the [encoding.BinaryMarshaler].
 func (sID SandID) MarshalBinary() ([]byte, error) {
 	return sID[:], nil
 }
 
-// UnmarshalBinary implements the `encoding.BinaryUnmarshaler`.
+// UnmarshalBinary implements the [encoding.BinaryUnmarshaler].
 func (sID *SandID) UnmarshalBinary(data []byte) error {
 	if len(data) != 16 {
 		return errors.New("sandid: invalid length bytes")
@@ -243,12 +243,12 @@ func (sID *SandID) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-// MarshalJSON implements the `json.Marshaler`.
+// MarshalJSON implements the [json.Marshaler].
 func (sID SandID) MarshalJSON() ([]byte, error) {
 	return json.Marshal(sID.String())
 }
 
-// UnmarshalJSON implements the `json.Unmarshaler`.
+// UnmarshalJSON implements the [json.Unmarshaler].
 func (sID *SandID) UnmarshalJSON(data []byte) error {
 	s := ""
 	if err := json.Unmarshal(data, &s); err != nil {
@@ -258,25 +258,26 @@ func (sID *SandID) UnmarshalJSON(data []byte) error {
 	return sID.UnmarshalText([]byte(s))
 }
 
-// Equal reports whether the `a` and `b` are equal.
+// Equal reports whether the a and b are equal.
 func Equal(a, b SandID) bool {
 	return Compare(a, b) == 0
 }
 
-// Compare returns an integer comparing the `a` and `b` lexicographically. The
-// result will be `0` if `a == b`, `-1` if `a < b`, and `+1` if `a > b`.
+// Compare returns an integer comparing the a and b lexicographically. The
+// result will be 0 if a == b, -1 if a < b, and +1 if a > b.
 func Compare(a, b SandID) int {
 	return bytes.Compare(a[:], b[:])
 }
 
-// NullSandID represents an instance of the `SandID` that may be null. It
-// implements the `sql.Scanner` so it can be used as a scan destination.
+// NullSandID represents an instance of the [SandID] that may be null. It
+// implements the [database/sql.Scanner] so it can be used as a scan
+// destination.
 type NullSandID struct {
 	SandID SandID
 	Valid  bool
 }
 
-// Scan implements the `sql.Scanner`.
+// Scan implements the [database/sql.Scanner].
 func (nsID *NullSandID) Scan(value interface{}) error {
 	if value == nil {
 		nsID.SandID, nsID.Valid = SandID{}, false
@@ -288,7 +289,7 @@ func (nsID *NullSandID) Scan(value interface{}) error {
 	return nsID.SandID.Scan(value)
 }
 
-// Value implements the `driver.Valuer`.
+// Value implements the [driver.Valuer].
 func (nsID NullSandID) Value() (driver.Value, error) {
 	if !nsID.Valid {
 		return nil, nil
