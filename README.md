@@ -43,7 +43,7 @@ $ go get github.com/aofei/sandid
 
 done.
 
-> The only requirement is the [Go](https://golang.org), at least v1.13.
+> The only requirement is the [Go](https://go.dev), at least v1.13.
 
 ## Community
 
